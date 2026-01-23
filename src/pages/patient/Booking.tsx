@@ -53,7 +53,7 @@ export default function BookingPage() {
                     <Link to="/my-appointments">
                         <Button variant="outline">View Appointments</Button>
                     </Link>
-                    <Link to="/">
+                    <Link to="/dashboard">
                         <Button>Back Home</Button>
                     </Link>
                 </div>

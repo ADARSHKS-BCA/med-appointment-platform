@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from '@/pages/Login';
+import LandingPage from '@/pages/LandingPage';
+
 
 // Patient Pages
 import HomePage from '@/pages/patient/Home';
@@ -38,10 +40,11 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<LandingPage />} />
 
                 {/* Patient Routes */}
                 <Route element={<MainLayout />}>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/dashboard" element={<HomePage />} />
                     <Route path="/doctors" element={<DoctorsPage />} />
                     <Route path="/book/:doctorId" element={<BookingPage />} />
                     <Route path="/my-appointments" element={<MyAppointments />} />
