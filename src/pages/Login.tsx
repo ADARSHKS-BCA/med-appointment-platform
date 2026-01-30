@@ -35,6 +35,7 @@ function LoginFormWrapper() {
         username: "",
         password: ""
     });
+    const [isDoctorLogin, setIsDoctorLogin] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -76,9 +77,11 @@ function LoginFormWrapper() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Login</CardTitle>
+                        <CardTitle>{isDoctorLogin ? "Doctor Login" : "Patient Login"}</CardTitle>
                         <CardDescription>
-                            Enter your credentials to access your account.
+                            {isDoctorLogin
+                                ? "Enter your doctor credentials to access the dashboard."
+                                : "Enter your credentials to access your account."}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -93,7 +96,7 @@ function LoginFormWrapper() {
                                 <Input
                                     id="username"
                                     name="username"
-                                    placeholder="Enter your username"
+                                    placeholder={isDoctorLogin ? "Dr. Username" : "Enter your username"}
                                     value={formData.username}
                                     onChange={handleChange}
                                     required
@@ -123,13 +126,40 @@ function LoginFormWrapper() {
                             </Button>
                         </form>
                     </CardContent>
-                    <CardFooter className="flex justify-center border-t p-4">
-                        <p className="text-sm text-muted-foreground">
-                            Don't have an account?{" "}
-                            <Link to="/register" className="text-primary hover:underline">
-                                Register
-                            </Link>
-                        </p>
+                    <CardFooter className="flex flex-col space-y-4 border-t p-4">
+                        <div className="text-sm text-center text-muted-foreground">
+                            {isDoctorLogin ? (
+                                <>
+                                    Not a doctor?{" "}
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsDoctorLogin(false)}
+                                        className="text-primary font-medium hover:underline"
+                                    >
+                                        Patient Login
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    Are you a doctor?{" "}
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsDoctorLogin(true)}
+                                        className="text-primary font-medium hover:underline"
+                                    >
+                                        Doctor Login
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                        {!isDoctorLogin && (
+                            <p className="text-sm text-muted-foreground text-center">
+                                Don't have an account?{" "}
+                                <Link to="/register" className="text-primary hover:underline">
+                                    Register
+                                </Link>
+                            </p>
+                        )}
                     </CardFooter>
                 </Card>
             </div>

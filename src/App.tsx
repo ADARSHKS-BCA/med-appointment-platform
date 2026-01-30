@@ -53,14 +53,14 @@ export default function App() {
                 </Route>
 
                 {/* Doctor Routes */}
-                <Route element={<ProtectedRoute allowedRoles={['doctor']} />}>
+                <Route element={<ProtectedRoute allowedRoles={['DOCTOR']} />}>
                     <Route element={<DoctorLayout />}>
                         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
                     </Route>
                 </Route>
 
                 {/* Admin Routes */}
-                <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
                     <Route element={<AdminLayout />}>
                         <Route path="/admin/dashboard" element={<AdminDashboard />} />
                         <Route path="/admin/doctors" element={<AdminDoctorsPage />} />
