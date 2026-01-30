@@ -2,43 +2,52 @@ import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, User, CheckCircle, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-// Mock Appointments
-const initialAppointments = [
-    {
-        id: "201",
-        patientName: "John Doe",
-        time: "09:00 AM",
-        type: "Regular Checkup",
-        status: "Upcoming",
-    },
-    {
-        id: "202",
-        patientName: "Sarah Connor",
-        time: "10:30 AM",
-        type: "Cardiology Consult",
-        status: "Upcoming",
-    },
-    {
-        id: "203",
-        patientName: "Mike Ross",
-        time: "02:00 PM",
-        type: "Follow-up",
-        status: "Cancelled",
-    },
-];
+import { appointmentService, Appointment } from "@/lib/services/appointments";
+import { format } from "date-fns";
+
 
 export default function DoctorDashboard() {
     const { user } = useAuth();
-    const [appointments, setAppointments] = useState(initialAppointments);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const handleStatusChange = (id: string, newStatus: string) => {
-        setAppointments((prev) =>
-            prev.map((apt) => (apt.id === id ? { ...apt, status: newStatus } : apt))
-        );
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                const data = await appointmentService.getMyAppointments();
+                setAppointments(data);
+            } catch (error) {
+                console.error("Failed to fetch appointments", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchAppointments();
+    }, [user]);
+
+    const handleStatusChange = async (id: number, newStatus: string) => {
+        try {
+            await appointmentService.updateStatus(id, newStatus);
+            // Optimistic update or refetch
+            setAppointments((prev) =>
+                prev.map((apt) => (apt.id === id ? { ...apt, status: newStatus as any } : apt))
+            );
+        } catch (error) {
+            console.error("Failed to update status", error);
+        }
     };
+
+    if (isLoading) {
+        return (
+            <div className="flex h-96 items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -67,23 +76,23 @@ export default function DoctorDashboard() {
                             <div key={apt.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                                 <div className="flex gap-4">
                                     <div className="flex flex-col items-center justify-center h-12 w-16 bg-primary/10 rounded-md text-primary font-bold text-sm">
-                                        {apt.time.split(" ")[0]}
-                                        <span className="text-xs font-normal text-muted-foreground">{apt.time.split(" ")[1]}</span>
+                                        {format(new Date(apt.appointment_datetime), "HH:mm")}
+                                        <span className="text-xs font-normal text-muted-foreground">{format(new Date(apt.appointment_datetime), "MMM d")}</span>
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold">{apt.patientName}</h3>
-                                        <p className="text-sm text-muted-foreground">{apt.type}</p>
+                                        <h3 className="font-semibold">{apt.patient.first_name} {apt.patient.last_name}</h3>
+                                        <p className="text-sm text-muted-foreground">{apt.reason}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center gap-3 mt-4 sm:mt-0 w-full sm:w-auto">
-                                    {apt.status === "Upcoming" ? (
+                                    {['PENDING', 'CONFIRMED'].includes(apt.status) ? (
                                         <>
                                             <Button
                                                 size="sm"
                                                 variant="outline"
                                                 className="flex-1 sm:flex-none border-green-200 hover:bg-green-50 hover:text-green-600 dark:border-green-900/50 dark:hover:bg-green-900/20"
-                                                onClick={() => handleStatusChange(apt.id, "Completed")}
+                                                onClick={() => handleStatusChange(apt.id, "COMPLETED")}
                                             >
                                                 <CheckCircle className="h-4 w-4 mr-2" /> Complete
                                             </Button>
@@ -91,14 +100,14 @@ export default function DoctorDashboard() {
                                                 size="sm"
                                                 variant="ghost"
                                                 className="flex-1 sm:flex-none hover:text-destructive hover:bg-destructive/10"
-                                                onClick={() => handleStatusChange(apt.id, "Cancelled")}
+                                                onClick={() => handleStatusChange(apt.id, "CANCELLED")}
                                             >
                                                 Cancel
                                             </Button>
                                         </>
                                     ) : (
                                         <span className={cn("text-sm font-medium px-3 py-1 rounded-full",
-                                            apt.status === "Completed" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                                            apt.status === "COMPLETED" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
                                                 "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400")}>
                                             {apt.status}
                                         </span>

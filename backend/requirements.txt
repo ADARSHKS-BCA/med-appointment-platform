@@ -1,0 +1,35 @@
+# Core Django
+Django==4.2.9
+djangorestframework==3.14.0
+
+# Database
+psycopg2-binary==2.9.9
+
+# Authentication
+djangorestframework-simplejwt==5.3.1
+
+# Environment variables
+python-decouple==3.8
+
+# CORS handling
+django-cors-headers==4.3.1
+
+# Filtering
+django-filter==23.5
+
+# Password validation
+argon2-cffi==23.1.0
+
+# API Documentation (optional but recommended)
+drf-yasg==1.21.7
+
+# Future: Redis support (commented for now)
+# redis==5.0.1
+# django-redis==5.4.0
+
+# Future: WebSocket support (commented for now)
+# channels==4.0.0
+# channels-redis==4.1.0
+
+# Development tools
+python-dotenv==1.0.0

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from '@/pages/Login';
+import RegisterPage from '@/pages/Register';
 import LandingPage from '@/pages/LandingPage';
 
 
@@ -40,6 +41,7 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
                 <Route path="/" element={<LandingPage />} />
 
                 {/* Patient Routes */}
