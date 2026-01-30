@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from '@/pages/Login';
 import LandingPage from '@/pages/LandingPage';
+import AboutPage from '@/pages/About'; 
 
 
 // Patient Pages
@@ -48,6 +49,7 @@ export default function App() {
                     <Route path="/doctors" element={<DoctorsPage />} />
                     <Route path="/book/:doctorId" element={<BookingPage />} />
                     <Route path="/my-appointments" element={<MyAppointments />} />
+                    <Route path="/about" element={<AboutPage />} />
                 </Route>
 
                 {/* Doctor Routes */}
