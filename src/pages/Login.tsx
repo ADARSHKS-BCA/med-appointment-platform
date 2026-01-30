@@ -47,16 +47,16 @@ function LoginFormWrapper() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center px-4 bg-muted/30">
-            <div className="w-full max-w-md">
+        <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-primary">ClinicApp</h1>
                     <p className="text-muted-foreground mt-2">Sign in to your account</p>
                 </div>
 
                 <Tabs defaultValue="patient" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 mb-6">
-                        <TabsTrigger value="patient">Patient</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 mb-6 bg-secondary/40 backdrop-blur">
+                <TabsTrigger value="patient">Patient</TabsTrigger>
                         <TabsTrigger value="doctor">Doctor</TabsTrigger>
                         <TabsTrigger value="admin">Admin</TabsTrigger>
                     </TabsList>
@@ -78,7 +78,8 @@ function LoginFormWrapper() {
 
 function LoginForm({ role, onSubmit, isLoading }: { role: string; onSubmit: () => void; isLoading: boolean }) {
     return (
-        <Card>
+        <Card className="glass-card animate-slide-up">
+
             <CardHeader>
                 <CardTitle className="capitalize">{role} Login</CardTitle>
                 <CardDescription>
@@ -94,8 +95,8 @@ function LoginForm({ role, onSubmit, isLoading }: { role: string; onSubmit: () =
                     <Label htmlFor={`password-${role}`}>Password</Label>
                     <Input id={`password-${role}`} type="password" />
                 </div>
-                <Button className="w-full" onClick={onSubmit} disabled={isLoading}>
-                    {isLoading ? "Signing in..." : "Sign In"}
+                <Button className="w-full hover-lift" onClick={onSubmit} disabled={isLoading}>
+    {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
             </CardContent>
         </Card>

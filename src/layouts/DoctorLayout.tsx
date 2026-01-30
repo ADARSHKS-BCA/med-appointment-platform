@@ -93,7 +93,7 @@ export default function DoctorLayout(): JSX.Element {
       </aside>
 
       {/* ───────────── Main Content ───────────── */}
-      <main className="flex-1 bg-muted/10">
+      <main className="flex-1">
         <header className="flex h-16 items-center border-b bg-background px-6">
           <h1 className="text-lg font-semibold">Dashboard</h1>
 
