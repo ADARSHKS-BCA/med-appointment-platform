@@ -48,7 +48,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-12 px-8 text-lg border-white text-white hover:bg-white hover:text-blue-700 transition"
+                  className="h-12 px-8 text-lg bg-white text-blue-700 hover:bg-white/90 shadow-lg hover:shadow-xl transition"
                 >
                   Patient Login
                 </Button>
