@@ -38,7 +38,7 @@ function LoginFormWrapper() {
         if (redirectPath) {
             navigate(redirectPath);
         } else {
-            if (role === "patient") navigate("/");
+            if (role === "patient") navigate("/dashboard");
             else if (role === "doctor") navigate("/doctor/dashboard");
             else if (role === "admin") navigate("/admin/dashboard");
         }

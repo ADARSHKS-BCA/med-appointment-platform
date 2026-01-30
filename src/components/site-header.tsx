@@ -22,7 +22,7 @@ export function SiteHeader() {
                 </div>
 
                 {/* Logo */}
-                <Link to="/" className="flex items-center space-x-2">
+                <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
                     <span className="text-xl font-bold">Clinic<span className="text-primary">App</span></span>
                 </Link>
 
@@ -87,7 +87,7 @@ export function SiteHeader() {
             {isMenuOpen && (
                 <div className="md:hidden border-t bg-background p-4 space-y-4">
                     <nav className="flex flex-col gap-4">
-                        <Link to="/" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+                        <Link to={user ? "/dashboard" : "/"} className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
                         <Link to="/doctors" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>Doctors</Link>
                         {!user && (
                             <Link to="/login" className="text-sm font-medium text-primary" onClick={() => setIsMenuOpen(false)}>Login / Register</Link>
