@@ -4,11 +4,25 @@ Django settings for Medical Appointment Management System.
 
 from pathlib import Path
 from datetime import timedelta
-from decouple import config
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Force loading specific .env file to avoid leaking global/parent envs
+# Force loading specific .env file to avoid leaking global/parent envs
+env_path = BASE_DIR / '.env'
+load_dotenv(env_path, override=True)
+
+def config(key, default=None, cast=None):
+    val = os.getenv(key, default)
+    if cast:
+        try:
+            return cast(val)
+        except (ValueError, TypeError):
+            return default
+    return val
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
