@@ -27,26 +27,45 @@ export function SiteHeader() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center space-x-6 text-sm font-medium mx-6">
-                    <Link
-                        to="/doctors"
-                        className={cn(
-                            "transition-colors hover:text-foreground/80",
-                            location.pathname === "/doctors" ? "text-foreground" : "text-foreground/60"
-                        )}
-                    >
-                        Doctors
-                    </Link>
-                    <Link
-                        to="/doctors" // Placeholder for about
-                        className={cn(
-                            "transition-colors hover:text-foreground/80",
-                            location.pathname === "/about" ? "text-foreground" : "text-foreground/60"
-                        )}
-                    >
-                        About
-                    </Link>
-                </nav>
+              
+
+{/* Desktop Nav */}
+<nav className="hidden md:flex items-center space-x-6 text-sm font-medium mx-6">
+    <Link
+        to="/doctors"
+        className={cn(
+            "transition-colors hover:text-foreground/80",
+            location.pathname === "/doctors" ? "text-foreground" : "text-foreground/60"
+        )}
+    >
+        Doctors
+    </Link>
+    <Link
+        to="/about" // Change this from "/doctors" to "/about"
+        className={cn(
+            "transition-colors hover:text-foreground/80",
+            location.pathname === "/about" ? "text-foreground" : "text-foreground/60"
+        )}
+    >
+        About
+    </Link>
+</nav>
+
+
+
+{/* Mobile Menu Overlay */}
+{isMenuOpen && (
+<div className="md:hidden border-t bg-background p-4 space-y-4">
+    <nav className="flex flex-col gap-4">
+        <Link to={user ? "/dashboard" : "/"} className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+        <Link to="/doctors" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>Doctors</Link>
+        <Link to="/about" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>About</Link> {/* Add this link for mobile menu */}
+        {!user && (
+            <Link to="/login" className="text-sm font-medium text-primary" onClick={() => setIsMenuOpen(false)}>Login / Register</Link>
+        )}
+    </nav>
+</div>
+)}
 
                 {/* User Nav */}
                 <div className="flex items-center gap-2">
