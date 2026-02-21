@@ -98,26 +98,24 @@ export default function DoctorDashboard() {
                 ) : (
                     appointments.map((appt) => (
                         <Card key={appt.id}>
-                            <CardContent className="flex items-center justify-between p-6">
-                                <div className="space-y-1">
-                                    <p className="font-medium leading-none">
+                            <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 sm:p-6">
+                                <div className="space-y-1 min-w-0">
+                                    <p className="font-medium leading-none truncate">
                                         {appt.patient?.fullName || appt.patient?.user?.email || 'Unknown Patient'}
                                     </p>
                                     <p className="text-sm text-slate-500">{appt.reason}</p>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-medium">{format(new Date(appt.startTime), 'PP')}</p>
-                                    <p className="text-sm text-slate-500">{format(new Date(appt.startTime), 'p')} - {format(new Date(appt.endTime), 'p')}</p>
+                                <div className="sm:text-right text-sm shrink-0">
+                                    <p className="font-medium">{format(new Date(appt.startTime), 'PP')}</p>
+                                    <p className="text-slate-500">{format(new Date(appt.startTime), 'p')} - {format(new Date(appt.endTime), 'p')}</p>
                                 </div>
-                                <div className="flex items-center gap-4">
-                                    <div>
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${appt.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                                            appt.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
-                                                'bg-yellow-100 text-yellow-800'
-                                            }`}>
-                                            {appt.status}
-                                        </span>
-                                    </div>
+                                <div className="flex items-center gap-3 shrink-0">
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${appt.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                                        appt.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                                            'bg-yellow-100 text-yellow-800'
+                                        }`}>
+                                        {appt.status}
+                                    </span>
                                     {appt.status === 'REQUESTED' && (
                                         <div className="flex gap-2">
                                             <button

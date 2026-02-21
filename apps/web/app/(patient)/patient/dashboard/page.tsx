@@ -100,17 +100,17 @@ export default function PatientDashboard() {
                                         </DialogDescription>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="date" className="text-right">Date</Label>
-                                            <Input id="date" type="date" className="col-span-3" onChange={(e) => setDate(e.target.value)} />
+                                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4">
+                                            <Label htmlFor="date" className="sm:text-right">Date</Label>
+                                            <Input id="date" type="date" className="sm:col-span-3" onChange={(e) => setDate(e.target.value)} />
                                         </div>
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="time" className="text-right">Time</Label>
-                                            <Input id="time" type="time" className="col-span-3" onChange={(e) => setTime(e.target.value)} />
+                                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4">
+                                            <Label htmlFor="time" className="sm:text-right">Time</Label>
+                                            <Input id="time" type="time" className="sm:col-span-3" onChange={(e) => setTime(e.target.value)} />
                                         </div>
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="reason" className="text-right">Reason</Label>
-                                            <Input id="reason" placeholder="Fever, Checkup..." className="col-span-3" onChange={(e) => setReason(e.target.value)} />
+                                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-2 sm:gap-4">
+                                            <Label htmlFor="reason" className="sm:text-right">Reason</Label>
+                                            <Input id="reason" placeholder="Fever, Checkup..." className="sm:col-span-3" onChange={(e) => setReason(e.target.value)} />
                                         </div>
                                     </div>
                                     <DialogFooter>
