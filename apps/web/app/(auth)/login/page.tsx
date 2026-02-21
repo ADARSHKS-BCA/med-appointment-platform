@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { createSupabaseBrowserClient } from '@/lib/supabase-client';
 
 function LoginForm() {
     const router = useRouter();
@@ -116,7 +117,16 @@ function LoginForm() {
                 type="button"
                 variant="outline"
                 className="w-full border-slate-200 hover:bg-slate-50"
-                onClick={() => toast.info('Google sign-in will be available soon after Supabase setup.')}
+                onClick={async () => {
+                    const supabase = createSupabaseBrowserClient();
+                    const { error } = await supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: `${window.location.origin}/auth/callback`,
+                        },
+                    });
+                    if (error) toast.error(error.message);
+                }}
             >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                     <path
