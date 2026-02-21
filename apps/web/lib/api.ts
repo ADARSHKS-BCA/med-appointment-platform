@@ -6,7 +6,7 @@ type FetchOptions = RequestInit & {
     headers?: Record<string, string>;
 };
 
-async function fetchInternal(endpoint: string, options: FetchOptions = {}) {
+async function fetchInternal(endpoint: string, options: RequestInit & { headers?: Record<string, string> } = {}) {
     const token = getCookie('token');
 
     const headers = new Headers(options.headers);

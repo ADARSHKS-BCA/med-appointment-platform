@@ -23,6 +23,7 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
             role: decoded.role,
             ...decoded
         };
+        console.log(`[Middleware] Auth User: ${req.user.userId}, Role: ${req.user.role}`);
         next();
     });
 };

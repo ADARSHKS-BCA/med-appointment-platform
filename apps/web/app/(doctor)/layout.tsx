@@ -1,5 +1,6 @@
 
 import Link from 'next/link';
+import DoctorHeader from '@/components/doctor/DoctorHeader';
 
 export default function DoctorLayout({
     children,
@@ -28,9 +29,7 @@ export default function DoctorLayout({
             <main className="flex-1 overflow-y-auto">
                 <header className="h-16 bg-white border-b flex items-center justify-between px-8">
                     <h1 className="text-xl font-semibold">Doctor Dashboard</h1>
-                    <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full"></div>
-                    </div>
+                    <DoctorHeader />
                 </header>
                 <div className="p-8">
                     {children}

@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
+import { getCookie } from 'cookies-next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 interface Appointment {
     id: string;
-    patient: {
+    patient?: {
         fullName: string;
-        user: {
+        user?: {
             email: string;
         };
     };
@@ -25,6 +26,19 @@ export default function DoctorDashboard() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const userCookie = getCookie('user');
+        if (userCookie) {
+            try {
+                const user = JSON.parse(userCookie as string);
+                if (user.role !== 'DOCTOR') {
+                    toast.error('Access Denied: You are logged in as a Patient.');
+                    window.location.href = '/patient/dashboard';
+                    return;
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }
         fetchAppointments();
     }, []);
 
@@ -44,8 +58,11 @@ export default function DoctorDashboard() {
             await api.patch(`/appointments/${id}/status`, { status });
             toast.success(`Appointment ${status.toLowerCase()}`);
             fetchAppointments(); // Refresh list
-        } catch (error) {
-            toast.error('Failed to update status');
+        } catch (error: any) {
+            // Show the specific error from backend if available
+            const errorMessage = error.message || 'Failed to update status';
+            toast.error(errorMessage);
+            console.error('Status update failed:', error);
         }
     };
 
@@ -126,3 +143,4 @@ export default function DoctorDashboard() {
         </div>
     );
 }
+

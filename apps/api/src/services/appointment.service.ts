@@ -84,6 +84,8 @@ export const getAppointmentsForDoctor = async (userId: string) => {
 };
 
 export const updateAppointmentStatus = async (appointmentId: string, status: 'CONFIRMED' | 'CANCELLED', userId: string, role: string) => {
+    console.log(`[Service] updateAppointmentStatus: ID=${appointmentId}, Status=${status}, User=${userId}, Role=${role}`);
+
     const appointment = await prisma.appointment.findUnique({
         where: { id: appointmentId },
         include: {
@@ -98,14 +100,20 @@ export const updateAppointmentStatus = async (appointmentId: string, status: 'CO
 
     // Authorization Logic
     if (role === 'DOCTOR') {
+        console.log('[Service] Processing as DOCTOR');
         if (!appointment.doctor) {
+            console.error('[Service] Error: Doctor profile missing in appointment');
             throw new Error('Appointment data corrupted: Doctor profile missing');
         }
+        // Verify the doctor owns this appointment
+        // appointment.doctor.userId is the User ID associated with the doctor profile
         if (appointment.doctor.userId !== userId) {
+            console.error(`[Service] Unauthorized: Doctor ${appointment.doctor.userId} !== User ${userId}`);
             throw new Error('Unauthorized: You can only update your own appointments');
         }
         // Doctors can Confirm or Cancel
     } else if (role === 'PATIENT') {
+        console.log('[Service] Processing as PATIENT');
         if (!appointment.patient) {
             throw new Error('Appointment data corrupted: Patient profile missing');
         }
@@ -116,6 +124,7 @@ export const updateAppointmentStatus = async (appointmentId: string, status: 'CO
             throw new Error('Patients can only cancel appointments');
         }
     } else {
+        console.error(`[Service] Unauthorized role: ${role}`);
         throw new Error('Unauthorized role');
     }
 
