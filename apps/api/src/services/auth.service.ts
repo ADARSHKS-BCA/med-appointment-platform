@@ -4,7 +4,10 @@ import { prisma, User, Role } from '@mediconnect/database';
 import { RegisterInput, LoginInput } from '@mediconnect/shared-types';
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey-dev-only';
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is required in production');
+}
 
 export const registerUser = async (input: RegisterInput) => {
     const existingUser = await prisma.user.findUnique({
