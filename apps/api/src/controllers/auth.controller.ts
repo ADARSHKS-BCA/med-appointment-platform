@@ -35,3 +35,25 @@ export const logout = (req: Request, res: Response) => {
     res.clearCookie('refreshToken');
     res.json({ message: 'Logged out successfully' });
 };
+
+export const googleLogin = async (req: Request, res: Response) => {
+    try {
+        const { email, fullName } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const { user, token, refreshToken } = await AuthService.socialLogin(email, fullName);
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.json({ user, token, refreshToken });
+    } catch (error: any) {
+        res.status(401).json({ error: error.message });
+    }
+};

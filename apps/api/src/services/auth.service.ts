@@ -70,3 +70,41 @@ export const loginUser = async (input: LoginInput) => {
 
     return { user: { id: user.id, email: user.email, role: user.role }, token, refreshToken };
 };
+
+export const socialLogin = async (email: string, fullName?: string) => {
+    // Find existing user or create a new one
+    let user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+        // Create new patient account for Google users
+        const randomHash = await bcrypt.hash(Math.random().toString(36), SALT_ROUNDS);
+        user = await prisma.user.create({
+            data: {
+                email,
+                passwordHash: randomHash, // placeholder — Google users don't need a password
+                role: 'PATIENT' as Role,
+                patientProfile: {
+                    create: { fullName: fullName || email.split('@')[0] },
+                },
+            },
+        });
+    }
+
+    if (!user.isActive) {
+        throw new Error('Account is deactivated');
+    }
+
+    const token = jwt.sign(
+        { sub: user.id, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+        { sub: user.id },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+
+    return { user: { id: user.id, email: user.email, role: user.role }, token, refreshToken };
+};
