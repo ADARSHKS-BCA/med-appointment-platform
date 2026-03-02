@@ -118,12 +118,16 @@ function LoginForm() {
                 variant="outline"
                 className="w-full border-slate-200 hover:bg-slate-50 rounded-xl h-11"
                 onClick={async () => {
-                    const supabase = createSupabaseBrowserClient();
-                    const { error } = await supabase.auth.signInWithOAuth({
-                        provider: 'google',
-                        options: { redirectTo: `${window.location.origin}/auth/callback` },
-                    });
-                    if (error) toast.error(error.message);
+                    try {
+                        const supabase = createSupabaseBrowserClient();
+                        const { error } = await supabase.auth.signInWithOAuth({
+                            provider: 'google',
+                            options: { redirectTo: `${window.location.origin}/auth/callback` },
+                        });
+                        if (error) toast.error(error.message);
+                    } catch {
+                        toast.error('Google sign-in is not configured. Please contact support.');
+                    }
                 }}
             >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
