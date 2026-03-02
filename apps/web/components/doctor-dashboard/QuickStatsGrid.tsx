@@ -14,16 +14,18 @@ interface QuickStatsGridProps {
 }
 
 export function QuickStatsGrid({ stats, loading }: QuickStatsGridProps) {
-    const defaultStats = {
-        totalAppointments: 24,
-        patientsWaiting: 5,
-        completedToday: 12,
-        noShows: 1,
-        revenueToday: 12500,
-        avgConsultationTime: '14 mins',
-    };
+    if (!stats && !loading) {
+        return null; // No data, no fallback
+    }
 
-    const displayStats = stats || defaultStats;
+    const displayStats = stats || {
+        totalAppointments: 0,
+        patientsWaiting: 0,
+        completedToday: 0,
+        noShows: 0,
+        revenueToday: 0,
+        avgConsultationTime: 'N/A',
+    };
 
     const cards = [
         {

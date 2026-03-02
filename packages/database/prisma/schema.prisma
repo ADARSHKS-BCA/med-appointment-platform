@@ -26,6 +26,7 @@ enum VerificationStatus {
 enum AppointmentStatus {
   REQUESTED
   CONFIRMED
+  REJECTED
   COMPLETED
   CANCELLED
 }
@@ -107,10 +108,11 @@ model Appointment {
   doctor    Doctor            @relation(fields: [doctorId], references: [id])
   startTime DateTime
   endTime   DateTime
-  status    AppointmentStatus @default(REQUESTED)
-  reason    String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  status          AppointmentStatus @default(REQUESTED)
+  reason          String?
+  rejectionReason String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   review    Review?
 

@@ -21,41 +21,7 @@ interface AppointmentsTimelineProps {
 }
 
 export function AppointmentsTimeline({ appointments, onAction }: AppointmentsTimelineProps) {
-    // Mock data if none provided
-    const mockAppointments: AppointmentType[] = [
-        {
-            id: '1',
-            patientName: 'Sarah Smith',
-            age: 34,
-            gender: 'F',
-            type: 'Consultation',
-            status: 'Waiting',
-            startTime: new Date(new Date().setHours(9, 0, 0, 0)),
-            endTime: new Date(new Date().setHours(9, 30, 0, 0)),
-        },
-        {
-            id: '2',
-            patientName: 'Mike Johnson',
-            age: 45,
-            gender: 'M',
-            type: 'Follow-up',
-            status: 'Checked-in',
-            startTime: new Date(new Date().setHours(9, 30, 0, 0)),
-            endTime: new Date(new Date().setHours(10, 0, 0, 0)),
-        },
-        {
-            id: '3',
-            patientName: 'Emily Davis',
-            age: 28,
-            gender: 'F',
-            type: 'Emergency',
-            status: 'Scheduled',
-            startTime: new Date(new Date().setHours(11, 0, 0, 0)),
-            endTime: new Date(new Date().setHours(11, 45, 0, 0)),
-        },
-    ];
-
-    const displayAppointments = appointments || mockAppointments;
+    const displayAppointments = appointments || [];
 
     // Generate hours from 8 AM to 8 PM
     const hours = Array.from({ length: 13 }, (_, i) => i + 8);

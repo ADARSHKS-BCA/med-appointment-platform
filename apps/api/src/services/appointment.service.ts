@@ -79,11 +79,11 @@ export const getAppointmentsForDoctor = async (userId: string) => {
                 }
             }
         },
-        orderBy: { startTime: 'desc' }
+        orderBy: { startTime: 'asc' }
     });
 };
 
-export const updateAppointmentStatus = async (appointmentId: string, status: 'CONFIRMED' | 'CANCELLED', userId: string, role: string) => {
+export const updateAppointmentStatus = async (appointmentId: string, status: 'CONFIRMED' | 'CANCELLED' | 'REJECTED', userId: string, role: string, rejectionReason?: string) => {
     console.log(`[Service] updateAppointmentStatus: ID=${appointmentId}, Status=${status}, User=${userId}, Role=${role}`);
 
     const appointment = await prisma.appointment.findUnique({
@@ -105,13 +105,11 @@ export const updateAppointmentStatus = async (appointmentId: string, status: 'CO
             console.error('[Service] Error: Doctor profile missing in appointment');
             throw new Error('Appointment data corrupted: Doctor profile missing');
         }
-        // Verify the doctor owns this appointment
-        // appointment.doctor.userId is the User ID associated with the doctor profile
         if (appointment.doctor.userId !== userId) {
             console.error(`[Service] Unauthorized: Doctor ${appointment.doctor.userId} !== User ${userId}`);
             throw new Error('Unauthorized: You can only update your own appointments');
         }
-        // Doctors can Confirm or Cancel
+        // Doctors can Confirm, Reject, or Cancel
     } else if (role === 'PATIENT') {
         console.log('[Service] Processing as PATIENT');
         if (!appointment.patient) {
@@ -128,8 +126,22 @@ export const updateAppointmentStatus = async (appointmentId: string, status: 'CO
         throw new Error('Unauthorized role');
     }
 
+    const updateData: any = { status };
+    if (status === 'REJECTED' && rejectionReason) {
+        updateData.rejectionReason = rejectionReason;
+    }
+
     return prisma.appointment.update({
         where: { id: appointmentId },
-        data: { status }
+        data: updateData,
+        include: {
+            patient: {
+                include: {
+                    user: {
+                        select: { email: true }
+                    }
+                }
+            }
+        }
     });
 };

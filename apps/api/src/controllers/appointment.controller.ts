@@ -42,16 +42,16 @@ export const getAppointments = async (req: Request, res: Response) => {
 export const updateStatus = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { status } = req.body;
+        const { status, rejectionReason } = req.body;
         const user = (req as any).user;
 
         console.log(`[updateStatus] Request: ID=${id}, Status=${status}, User=${user.userId}, Role=${user.role}`);
 
-        if (!['CONFIRMED', 'CANCELLED'].includes(status)) {
+        if (!['CONFIRMED', 'CANCELLED', 'REJECTED'].includes(status)) {
             return res.status(400).json({ error: 'Invalid status' });
         }
 
-        const updatedAppointment = await AppointmentService.updateAppointmentStatus(id, status, user.userId, user.role);
+        const updatedAppointment = await AppointmentService.updateAppointmentStatus(id, status, user.userId, user.role, rejectionReason);
         console.log('[updateStatus] Success');
         res.json(updatedAppointment);
     } catch (error: any) {
