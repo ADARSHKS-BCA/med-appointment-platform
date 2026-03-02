@@ -36,8 +36,7 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}/login?error=auth_failed`);
     }
 
-    // Bridge to existing JWT system:
-    // Call our backend API to find/create user and get JWT token
+    // Bridge to existing JWT system
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
     try {
@@ -52,41 +51,26 @@ export async function GET(request: Request) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             console.error('Backend auth error:', errorData);
             return NextResponse.redirect(`${origin}/login?error=backend_auth_failed`);
         }
 
         const authData = await response.json();
+        const role = authData.user?.role;
 
-        // Set the same cookies the existing login flow uses
-        const redirectResponse = NextResponse.redirect(
-            `${origin}/${authData.user.role === 'DOCTOR' ? 'doctor/dashboard' : 'patient/dashboard'}`
-        );
-
-        redirectResponse.cookies.set('token', authData.token, {
-            path: '/',
-            maxAge: 15 * 60, // 15 minutes (matches JWT expiry)
-            sameSite: 'lax',
-        });
-
-        redirectResponse.cookies.set('user', JSON.stringify(authData.user), {
-            path: '/',
-            maxAge: 15 * 60,
-            sameSite: 'lax',
-        });
-
+        // Redirect to the client-side handler page which will set cookies and redirect
+        // This is more reliable than server-side cookie setting with redirects on Vercel
+        const destination = role === 'DOCTOR' ? '/doctor/dashboard' : '/patient/dashboard';
+        const callbackUrl = new URL(`${origin}/auth/complete`);
+        callbackUrl.searchParams.set('token', authData.token);
+        callbackUrl.searchParams.set('user', JSON.stringify(authData.user));
+        callbackUrl.searchParams.set('redirect', destination);
         if (authData.refreshToken) {
-            redirectResponse.cookies.set('refreshToken', authData.refreshToken, {
-                path: '/',
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
-                maxAge: 7 * 24 * 60 * 60, // 7 days
-            });
+            callbackUrl.searchParams.set('refreshToken', authData.refreshToken);
         }
 
-        return redirectResponse;
+        return NextResponse.redirect(callbackUrl.toString());
     } catch (err) {
         console.error('Backend call failed:', err);
         return NextResponse.redirect(`${origin}/login?error=server_error`);
